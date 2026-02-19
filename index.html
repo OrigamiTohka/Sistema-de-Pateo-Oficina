@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema de Pátio - Oficina</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Controle de Pátio</h1>
+
+        <div class="formulario">
+            <input type="text" id="cliente" placeholder="Nome da Locadora">
+            <input type="text" id="placa" placeholder="Placa do Veículo">
+            
+            <select id="status">
+                <option value="Aguardando">Aguardando Orçamento</option>
+                <option value="Aguardando Autorização">Aguardando Autorização</option>
+                <option value="Aguardando Peça">Aguardando Peça</option>
+                <option value="Em Serviço">Em Serviço</option>
+                <option value="Finalizado">Finalizado</option>
+            </select>
+
+            <button onclick="adicionarVeiculo()">Adicionar</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Placa</th>
+                    <th>Status</th>
+                    <th>Data Entrada</th>
+                    <th>Finalização</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody id="listaVeiculos"></tbody>
+        </table>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
