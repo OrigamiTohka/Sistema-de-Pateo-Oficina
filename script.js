@@ -134,7 +134,8 @@ window.filtrarPorCliente = function () {
         .forEach(v => renderizarVeiculo(v));
 }
 
-window.atualizarFiltroClientes = function () {
+// 🔹 ATUALIZAR FILTRO
+function atualizarFiltroClientes() {
     const select = document.getElementById("filtroCliente");
     select.innerHTML = `<option value="Todos">Todas</option>`;
 
