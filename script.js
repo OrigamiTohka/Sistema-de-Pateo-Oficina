@@ -1,21 +1,34 @@
-
 let veiculos = [];
 
+// 🔥 FIREBASE IMPORTS
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { 
-    getAuth, 
-    onAuthStateChanged, 
-    signOut 
+import {
+    getAuth,
+    onAuthStateChanged,
+    signOut
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    onSnapshot,
+    updateDoc,
+    deleteDoc,
+    doc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+// 🔥 CONFIG
 const firebaseConfig = {
     apiKey: "AIzaSyBbAI1SzsOy-Xkm5ihkzaY2Uie3s4u_LVQ",
     authDomain: "sistema-patio-oficina.firebaseapp.com",
-    projectId: "istema-patio-oficina"
+    projectId: "sistema-patio-oficina"
 };
 
+// 🔥 INIT
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 // 🔐 PROTEÇÃO DE ROTAS
 onAuthStateChanged(auth, user => {
@@ -30,15 +43,14 @@ onAuthStateChanged(auth, user => {
     }
 });
 
-// 🔹 CARREGAR EM TEMPO REAL
+// 🔄 TEMPO REAL
 window.onload = function () {
-    db.collection("veiculos").onSnapshot(snapshot => {
+    onSnapshot(collection(db, "veiculos"), snapshot => {
         veiculos = [];
         document.getElementById("listaVeiculos").innerHTML = "";
 
-        snapshot.forEach(doc => {
-            const veiculo = { id: doc.id, ...doc.data() };
-            veiculos.push(veiculo);
+        snapshot.forEach(docSnap => {
+            veiculos.push({ id: docSnap.id, ...docSnap.data() });
         });
 
         filtrarPorCliente();
@@ -46,19 +58,21 @@ window.onload = function () {
     });
 };
 
-// 🔹 ADICIONAR VEÍCULO
-window.adicionarVeiculo = async function() {
+// ➕ ADICIONAR VEÍCULO
+window.adicionarVeiculo = async function () {
     const cliente = document.getElementById("cliente").value;
+    const modelo = document.getElementById("modelo").value;
     const placa = document.getElementById("placa").value.toUpperCase();
     const status = document.getElementById("status").value;
 
-    if (!cliente || !placa) {
+    if (!cliente || !modelo || !placa) {
         alert("Preencha todos os campos!");
         return;
     }
 
-    db.collection("veiculos").add({
+    await addDoc(collection(db, "veiculos"), {
         cliente,
+        modelo,
         placa,
         status,
         dataEntrada: new Date().toISOString().split("T")[0],
@@ -66,89 +80,87 @@ window.adicionarVeiculo = async function() {
     });
 
     document.getElementById("cliente").value = "";
+    document.getElementById("modelo").value = "";
     document.getElementById("placa").value = "";
-}
+};
 
-// 🔹 RENDERIZAR
+// 🖥️ RENDERIZAR
 function renderizarVeiculo(veiculo) {
     const lista = document.getElementById("listaVeiculos");
 
     const linha = document.createElement("tr");
-    linha.setAttribute("data-id", veiculo.id);
-
-     linha.innerHTML = `
+    linha.innerHTML = `
         <td>${veiculo.cliente}</td>
+        <td>${veiculo.modelo || "-"}</td>
         <td>${veiculo.placa}</td>
-        <td><select onchange="mudarStatus('${veiculo.id}', this.value)">
+        <td>
+            <select onchange="mudarStatus('${veiculo.id}', this.value)">
                 ${["Aguardando Orçamento","Aguardando Autorização","Aguardando Peça","Em Serviço","Finalizado"]
-                .map(s => `<option value="${s}" ${s===veiculo.status?"selected":""}>${s}</option>`).join("")}
-        </select>
+                    .map(s => `<option value="${s}" ${s === veiculo.status ? "selected" : ""}>${s}</option>`)
+                    .join("")}
+            </select>
         </td>
-        <td><input type="date" value="${veiculo.dataEntrada}"onchange="mudarDataEntrada('${veiculo.id}', this.value)"></td>
-        <td class="finalizacao">${veiculo.dataFinalizacao || "-"}</td>
-        <td class="acao"><button onclick="removerVeiculo('${veiculo.id}')">Remover</button></td>`;
+        <td>
+            <input type="date" value="${veiculo.dataEntrada}"
+                onchange="mudarDataEntrada('${veiculo.id}', this.value)">
+        </td>
+        <td>${veiculo.dataFinalizacao || "-"}</td>
+        <td><button onclick="removerVeiculo('${veiculo.id}')">Remover</button></td>
+    `;
 
     aplicarCorStatus(linha, veiculo.status);
     lista.appendChild(linha);
 }
 
-// 🔹 STATUS
+// 🔁 STATUS
 window.mudarStatus = async function (id, status) {
-    db.collection("veiculos").doc(id).update({
+    await updateDoc(doc(db, "veiculos", id), {
         status,
         dataFinalizacao: status === "Finalizado"
             ? new Date().toISOString().split("T")[0]
             : ""
     });
-}
+};
 
-// 🔹 DATA ENTRADA
+// 📅 DATA ENTRADA
 window.mudarDataEntrada = async function (id, data) {
-    db.collection("veiculos").doc(id).update({
+    await updateDoc(doc(db, "veiculos", id), {
         dataEntrada: data
     });
-}
+};
 
-// 🔹 REMOVER
+// ❌ REMOVER
 window.removerVeiculo = async function (id) {
     if (confirm("Deseja remover este veículo?")) {
-        db.collection("veiculos").doc(id).delete();
+        await deleteDoc(doc(db, "veiculos", id));
     }
-}
+};
 
-// 🔹 FILTRO POR CLIENTE
+// 🔍 FILTRO
 window.filtrarPorCliente = function () {
-    const select = document.getElementById("filtroCliente");
+    const filtro = document.getElementById("filtroCliente").value;
     const lista = document.getElementById("listaVeiculos");
-
-    if (!select || !lista) return;
-
-    const filtro = select.value;
     lista.innerHTML = "";
 
     veiculos
         .filter(v => filtro === "Todos" || v.cliente === filtro)
-        .forEach(v => renderizarVeiculo(v));
+        .forEach(renderizarVeiculo);
 };
 
-// 🔹 ATUALIZAR LISTA DE CLIENTES NO FILTRO
+// 🔄 ATUALIZAR FILTRO
 function atualizarFiltroClientes() {
     const select = document.getElementById("filtroCliente");
-    if (!select) return;
-
     select.innerHTML = `<option value="Todos">Todos</option>`;
 
-    const clientesUnicos = [...new Set(veiculos.map(v => v.cliente))];
-
-    clientesUnicos.forEach(cliente => {
-        const option = document.createElement("option");
-        option.value = cliente;
-        option.textContent = cliente;
-        select.appendChild(option);
+    [...new Set(veiculos.map(v => v.cliente))].forEach(cliente => {
+        const opt = document.createElement("option");
+        opt.value = cliente;
+        opt.textContent = cliente;
+        select.appendChild(opt);
     });
 }
 
-// 🔹 CORES
+// 🎨 CORES
 function aplicarCorStatus(linha, status) {
     const cores = {
         "Finalizado": "#145a32",
@@ -160,8 +172,7 @@ function aplicarCorStatus(linha, status) {
     linha.style.backgroundColor = cores[status] || "transparent";
 }
 
+// 🚪 LOGOUT
 window.logout = function () {
-    signOut(auth).then(() => {
-        window.location.href = "login.html";
-    });
+    signOut(auth).then(() => location.href = "login.html");
 };
