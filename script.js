@@ -124,7 +124,7 @@ window.removerVeiculo = async function (id) {
 }
 
 // 🔹 FILTRO
-function filtrarPorCliente() {
+window.filtrarPorCliente = function () {
     const filtro = document.getElementById("filtroCliente").value;
     const lista = document.getElementById("listaVeiculos");
     lista.innerHTML = "";
@@ -134,7 +134,7 @@ function filtrarPorCliente() {
         .forEach(v => renderizarVeiculo(v));
 }
 
-function atualizarFiltroClientes() {
+window.atualizarFiltroClientes = function () {
     const select = document.getElementById("filtroCliente");
     select.innerHTML = `<option value="Todos">Todas</option>`;
 
