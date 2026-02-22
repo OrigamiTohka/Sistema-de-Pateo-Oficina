@@ -79,21 +79,14 @@ function renderizarVeiculo(veiculo) {
      linha.innerHTML = `
         <td>${veiculo.cliente}</td>
         <td>${veiculo.placa}</td>
-        <td>
-            <select onchange="mudarStatus('${veiculo.id}', this.value)">
+        <td><select onchange="mudarStatus('${veiculo.id}', this.value)">
                 ${["Aguardando Orçamento","Aguardando Autorização","Aguardando Peça","Em Serviço","Finalizado"]
-                    .map(s => `<option value="${s}" ${s===veiculo.status?"selected":""}>${s}</option>`).join("")}
-            </select>
+                .map(s => `<option value="${s}" ${s===veiculo.status?"selected":""}>${s}</option>`).join("")}
+        </select>
         </td>
-        <td>
-            <input type="date" value="${veiculo.dataEntrada}"
-            onchange="mudarDataEntrada('${veiculo.id}', this.value)">
-        </td>
+        <td><input type="date" value="${veiculo.dataEntrada}"onchange="mudarDataEntrada('${veiculo.id}', this.value)"></td>
         <td class="finalizacao">${veiculo.dataFinalizacao || "-"}</td>
-        <td class="acao">
-            <button onclick="removerVeiculo('${veiculo.id}')">Remover</button>
-        </td>
-    `;
+        <td class="acao"><button onclick="removerVeiculo('${veiculo.id}')">Remover</button></td>`;
 
     aplicarCorStatus(linha, veiculo.status);
     lista.appendChild(linha);
