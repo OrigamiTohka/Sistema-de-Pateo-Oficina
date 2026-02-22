@@ -1,5 +1,27 @@
 let veiculos = [];
 
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } 
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+// MESMA CONFIG
+const firebaseConfig = {
+    apiKey: "SUA_API_KEY",
+    authDomain: "SEU_PROJETO.firebaseapp.com",
+    projectId: "SEU_PROJETO"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// 🔐 PROTEÇÃO DO SISTEMA
+onAuthStateChanged(auth, (user) => {
+    if (!user) {
+        // NÃO LOGADO → VOLTA PARA LOGIN
+        window.location.href = "login.html";
+    }
+});
+
 // 🔹 CARREGAR EM TEMPO REAL
 window.onload = function () {
     db.collection("veiculos").onSnapshot(snapshot => {
@@ -127,3 +149,9 @@ function aplicarCorStatus(linha, status) {
     };
     linha.style.backgroundColor = cores[status] || "transparent";
 }
+
+window.logout = function () {
+    signOut(auth).then(() => {
+        window.location.href = "login.html";
+    });
+};
