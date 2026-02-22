@@ -7,47 +7,67 @@
 </head>
 <body>
 
-    <div class="container">
-        <h1>Controle de Pátio</h1>
+<div class="container">
+    <h1>Controle de Pátio</h1>
 
-        <div class="filtro">
-            <label for="filtroCliente">Filtro:</label>
-              <select id="filtroCliente" onchange="filtrarPorCliente()">
-              <option value="Todos">Todas</option>
-             </select>
-        </div>
-
-        <div class="formulario">
-            <input type="text" id="cliente" placeholder="Nome da Locadora">
-            <input type="text" id="modelo" placeholder="Modelo do Veiculo">
-            <input type="text" id="placa" placeholder="Placa do Veículo">
-            
-            <select id="status">
-                <option value="Aguardando">Aguardando Orçamento</option>
-                <option value="Aguardando Autorização">Aguardando Autorização</option>
-                <option value="Aguardando Peça">Aguardando Peça</option>
-                <option value="Em Serviço">Em Serviço</option>
-                <option value="Finalizado">Finalizado</option>
-            </select>
-
-            <button onclick="adicionarVeiculo()">Adicionar</button>
-        </div>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Cliente</th>
-                    <th>Placa</th>
-                    <th>Status</th>
-                    <th>Data Entrada</th>
-                    <th>Finalização</th>
-                    <th>Ação</th>
-                </tr>
-            </thead>
-            <tbody id="listaVeiculos"></tbody>
-        </table>
+    <!-- FILTRO -->
+    <div class="filtro">
+        <label>Filtrar por Locadora:</label>
+        <select id="filtroCliente" onchange="filtrarPorCliente()">
+            <option value="Todos">Todas</option>
+        </select>
     </div>
 
-    <script src="script.js"></script>
+    <!-- FORMULÁRIO -->
+    <div class="formulario">
+        <input type="text" id="cliente" placeholder="Nome da Locadora">
+        <input type="text" id="placa" placeholder="Placa do Veículo">
+
+        <select id="status">
+            <option value="Aguardando Orçamento">Aguardando Orçamento</option>
+            <option value="Aguardando Autorização">Aguardando Autorização</option>
+            <option value="Aguardando Peça">Aguardando Peça</option>
+            <option value="Em Serviço">Em Serviço</option>
+            <option value="Finalizado">Finalizado</option>
+        </select>
+
+        <button onclick="adicionarVeiculo()">Adicionar</button>
+    </div>
+
+    <!-- TABELA -->
+    <table>
+        <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Placa</th>
+                <th>Status</th>
+                <th>Data Entrada</th>
+                <th>Finalização</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody id="listaVeiculos"></tbody>
+    </table>
+</div>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+    apiKey: "SUA_API_KEY",
+    authDomain: "SEU_PROJETO.firebaseapp.com",
+    projectId: "SEU_PROJETO",
+    storageBucket: "SEU_PROJETO.appspot.com",
+    messagingSenderId: "XXXX",
+    appId: "XXXX"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+</script>
+
+<script src="script.js"></script>
 </body>
 </html>

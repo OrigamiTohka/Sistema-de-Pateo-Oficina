@@ -2,12 +2,11 @@ body {
     font-family: Arial, sans-serif;
     background-color: #1e1e1e;
     color: white;
-    margin: 0;
     padding: 20px;
 }
 
 .container {
-    max-width: 900px;
+    max-width: 1000px;
     margin: auto;
 }
 
@@ -15,10 +14,11 @@ h1 {
     text-align: center;
 }
 
-.formulario {
+.formulario, .filtro {
     display: flex;
     gap: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+    align-items: center;
 }
 
 input, select, button {
@@ -51,14 +51,16 @@ th, td {
 th {
     background-color: #333;
 }
-.filtro {
-    margin-bottom: 15px;
+
+.acao {
     display: flex;
-    gap: 10px;
-    align-items: center;
+    justify-content: center;
 }
 
-.filtro select {
-    padding: 6px;
-    border-radius: 5px;
+.acao button {
+    background-color: #e74c3c;
+}
+
+.acao button:hover {
+    background-color: #c0392b;
 }
