@@ -1,6 +1,35 @@
 
 let veiculos = [];
 
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { 
+    getAuth, 
+    onAuthStateChanged, 
+    signOut 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBbAI1SzsOy-Xkm5ihkzaY2Uie3s4u_LVQ",
+    authDomain: "sistema-patio-oficina.firebaseapp.com",
+    projectId: "istema-patio-oficina"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// 🔐 PROTEÇÃO DE ROTAS
+onAuthStateChanged(auth, user => {
+    const pagina = location.pathname;
+
+    if (!user && !pagina.includes("login.html")) {
+        location.href = "login.html";
+    }
+
+    if (user && pagina.includes("login.html")) {
+        location.href = "index.html";
+    }
+});
+
 // 🔹 CARREGAR EM TEMPO REAL
 window.onload = function () {
     db.collection("veiculos").onSnapshot(snapshot => {
@@ -18,7 +47,7 @@ window.onload = function () {
 };
 
 // 🔹 ADICIONAR VEÍCULO
-function adicionarVeiculo() {
+window.adicionarVeiculo = async function() {
     const cliente = document.getElementById("cliente").value;
     const placa = document.getElementById("placa").value.toUpperCase();
     const status = document.getElementById("status").value;
@@ -71,7 +100,7 @@ function renderizarVeiculo(veiculo) {
 }
 
 // 🔹 STATUS
-function mudarStatus(id, status) {
+window.mudarStatus = async function (id, status) {
     db.collection("veiculos").doc(id).update({
         status,
         dataFinalizacao: status === "Finalizado"
@@ -81,14 +110,14 @@ function mudarStatus(id, status) {
 }
 
 // 🔹 DATA ENTRADA
-function mudarDataEntrada(id, data) {
+window.mudarDataEntrada = async function (id, data) {
     db.collection("veiculos").doc(id).update({
         dataEntrada: data
     });
 }
 
 // 🔹 REMOVER
-function removerVeiculo(id) {
+window.removerVeiculo = async function (id) {
     if (confirm("Deseja remover este veículo?")) {
         db.collection("veiculos").doc(id).delete();
     }
