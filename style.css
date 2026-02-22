@@ -37,6 +37,12 @@ input, select, button {
     font-size: 16px;
 }
 
+#modelo {
+    width: 96%;
+    font-size: 16px;
+}
+
+
 button {
     background-color: #00b894;
     color: white;
