@@ -125,3 +125,46 @@ function removerVeiculo(id) {
 function salvarLocalStorage() {
     localStorage.setItem("patioOficina", JSON.stringify(veiculos));
 }
+
+// 🔹 Filtro
+
+
+function atualizarFiltroClientes() {
+
+    const select = document.getElementById("filtroCliente");
+
+    // limpa mantendo "Todos"
+    select.innerHTML = `<option value="Todos">Todas</option>`;
+
+    const clientesUnicos = [...new Set(veiculos.map(v => v.cliente))];
+
+    clientesUnicos.forEach(cliente => {
+        const option = document.createElement("option");
+        option.value = cliente;
+        option.textContent = cliente;
+        select.appendChild(option);
+    });
+}
+function filtrarPorCliente() {
+
+    const clienteSelecionado = document.getElementById("filtroCliente").value;
+    const lista = document.getElementById("listaVeiculos");
+
+    lista.innerHTML = "";
+
+    const veiculosFiltrados = clienteSelecionado === "Todos"
+        ? veiculos
+        : veiculos.filter(v => v.cliente === clienteSelecionado);
+
+    veiculosFiltrados.forEach(v => renderizarVeiculo(v));
+}
+window.onload = function () {
+    const dadosSalvos = localStorage.getItem("patioOficina");
+
+    if (dadosSalvos) {
+        veiculos = JSON.parse(dadosSalvos);
+        veiculos.forEach(veiculo => renderizarVeiculo(veiculo));
+    }
+
+    atualizarFiltroClientes();
+};
