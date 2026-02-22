@@ -123,23 +123,31 @@ window.removerVeiculo = async function (id) {
     }
 }
 
-// 🔹 FILTRO
+// 🔹 FILTRO POR CLIENTE
 window.filtrarPorCliente = function () {
-    const filtro = document.getElementById("filtroCliente").value;
+    const select = document.getElementById("filtroCliente");
     const lista = document.getElementById("listaVeiculos");
+
+    if (!select || !lista) return;
+
+    const filtro = select.value;
     lista.innerHTML = "";
 
     veiculos
         .filter(v => filtro === "Todos" || v.cliente === filtro)
         .forEach(v => renderizarVeiculo(v));
-}
+};
 
-// 🔹 ATUALIZAR FILTRO
+// 🔹 ATUALIZAR LISTA DE CLIENTES NO FILTRO
 function atualizarFiltroClientes() {
     const select = document.getElementById("filtroCliente");
-    select.innerHTML = `<option value="Todos">Todas</option>`;
+    if (!select) return;
 
-    [...new Set(veiculos.map(v => v.cliente))].forEach(cliente => {
+    select.innerHTML = `<option value="Todos">Todos</option>`;
+
+    const clientesUnicos = [...new Set(veiculos.map(v => v.cliente))];
+
+    clientesUnicos.forEach(cliente => {
         const option = document.createElement("option");
         option.value = cliente;
         option.textContent = cliente;
