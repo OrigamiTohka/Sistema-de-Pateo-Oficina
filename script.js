@@ -27,7 +27,8 @@ function adicionarVeiculo() {
         cliente,
         placa,
         status,
-        dataEntrada: new Date().toLocaleString()
+        dataEntrada: new Date().toISOString().split("T")[0],
+        dataFinalizacao: ""
     };
 
     veiculos.push(novoVeiculo);
@@ -58,8 +59,13 @@ function renderizarVeiculo(veiculo) {
                 <option value="Finalizado" ${veiculo.status === "Finalizado" ? "selected" : ""}>Finalizado</option>
             </select>
         </td>
-        <td>${veiculo.dataEntrada}</td>
+
+        <td><input type="date" value="${veiculo.dataEntrada}" onchange="mudarDataEntrada(${veiculo.id}, this.value)"></td>
+
+        <td class="finalizacao">${veiculo.dataFinalizacao || "-"}</td>
+
         <td><button onclick="removerVeiculo(${veiculo.id})">Remover</button></td>
+
     `;
 
     aplicarCorStatus(linha, veiculo.status);
@@ -72,10 +78,19 @@ function mudarStatus(id, novoStatus) {
     const veiculo = veiculos.find(v => v.id === id);
     veiculo.status = novoStatus;
 
+    if (novoStatus === "Finalizado") {
+        veiculo.dataFinalizacao = new Date().toISOString().split("T")[0];
+    } else {
+        veiculo.dataFinalizacao = "";
+    }
+
     salvarLocalStorage();
 
     const linha = document.querySelector(`tr[data-id='${id}']`);
     aplicarCorStatus(linha, novoStatus);
+
+    linha.querySelector(".finalizacao").innerText = veiculo.dataFinalizacao || "-";
+
 }
 
 // 🔹 Aplicar cor conforme status
@@ -110,4 +125,3 @@ function removerVeiculo(id) {
 function salvarLocalStorage() {
     localStorage.setItem("patioOficina", JSON.stringify(veiculos));
 }
-
