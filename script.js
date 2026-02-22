@@ -46,7 +46,7 @@ function renderizarVeiculo(veiculo) {
     const linha = document.createElement("tr");
     linha.setAttribute("data-id", veiculo.id);
 
-    linha.innerHTML = `
+     linha.innerHTML = `
         <td>${veiculo.cliente}</td>
         <td>${veiculo.placa}</td>
         <td>
