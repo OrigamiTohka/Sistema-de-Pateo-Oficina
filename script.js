@@ -143,11 +143,11 @@ window.filtrarPorCliente = function () {
     lista.innerHTML = "";
 
     veiculos
-        // 🔢 ORDENA POR DATA (MENOR → MAIOR)
+        // 📅 ORDENA DO MAIS ANTIGO → MAIS RECENTE
         .sort((a, b) => new Date(a.dataEntrada) - new Date(b.dataEntrada))
-        // 🔍 FILTRO POR CLIENTE
+        // 🔍 APLICA O FILTRO
         .filter(v => filtro === "Todos" || v.cliente === filtro)
-        // 🖥️ RENDERIZA
+        // 🖥️ MOSTRA NA TELA
         .forEach(renderizarVeiculo);
 };
 
