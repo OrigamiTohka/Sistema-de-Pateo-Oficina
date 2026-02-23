@@ -138,16 +138,26 @@ window.removerVeiculo = async function (id) {
 
 // 🔍 FILTRO
 window.filtrarPorCliente = function () {
-    const filtro = document.getElementById("filtroCliente").value;
+    const filtroCliente = document.getElementById("filtroCliente").value;
+    const pesquisaPlaca = document
+        .getElementById("pesquisaPlaca")
+        .value
+        .toUpperCase();
+
     const lista = document.getElementById("listaVeiculos");
     lista.innerHTML = "";
 
     veiculos
-        // 📅 ORDENA DO MAIS ANTIGO → MAIS RECENTE
+        // 📅 ORDENAR: MAIS ANTIGO → MAIS RECENTE
         .sort((a, b) => new Date(a.dataEntrada) - new Date(b.dataEntrada))
-        // 🔍 APLICA O FILTRO
-        .filter(v => filtro === "Todos" || v.cliente === filtro)
-        // 🖥️ MOSTRA NA TELA
+
+        // 🔍 FILTRO POR CLIENTE
+        .filter(v =>
+            (filtroCliente === "Todos" || v.cliente === filtroCliente) &&
+            (pesquisaPlaca === "" || v.placa.includes(pesquisaPlaca))
+        )
+
+        // 🖥️ RENDERIZA
         .forEach(renderizarVeiculo);
 };
 
