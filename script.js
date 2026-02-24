@@ -139,7 +139,6 @@ window.removerVeiculo = async function (id) {
 // 🔍 FILTRO
 window.filtrarPorCliente = function () {
     const filtroCliente = document.getElementById("filtroCliente").value;
-
     const inputPlaca = document.getElementById("pesquisaPlaca");
     const pesquisaPlaca = inputPlaca
         ? inputPlaca.value.toUpperCase()

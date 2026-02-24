@@ -15,8 +15,8 @@
 
     <!-- FILTRO -->
     <div class="filtro">
-    <label for="filtroCliente">Filtro Por Locadora:</label>
-    <select id="filtroCliente" onchange="filtrarPorCliente()">
+        <label for="filtroCliente">Filtro Por Locadora:</label>
+        <select id="filtroCliente" onchange="filtrarPorCliente()">
         <option value="Todos">Todos</option>
     </select>
 
@@ -28,6 +28,19 @@
         oninput="pesquisarPorPlaca()"
     >
     </div>
+
+    <div class="filtro">
+        <label>Status:</label>
+            <select id="filtroStatus" onchange="aplicarFiltros()">
+            <option value="Todos">Todos</option>
+            <option value="Aguardando Orçamento">Aguardando Orçamento</option>
+            <option value="Aguardando Autorização">Aguardando Autorização</option>
+            <option value="Aguardando Peça">Aguardando Peça</option>
+            <option value="Em Serviço">Em Serviço</option>
+            <option value="Finalizado">Finalizado</option>
+        </select>
+    </div>
+
     <!-- FORMULÁRIO -->
     <div class="formulario">
         <input type="text" id="cliente" placeholder="Nome da Locadora">
