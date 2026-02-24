@@ -149,11 +149,8 @@ window.filtrarPorCliente = function () {
     lista.innerHTML = "";
 
     veiculos
-        // 📅 MAIS ANTIGO → MAIS RECENTE (AGORA FUNCIONA 100%)
-        .sort((a, b) =>
-            converterDataParaOrdenacao(a.dataEntrada) -
-            converterDataParaOrdenacao(b.dataEntrada)
-        )
+        // 📅 MAIS ANTIGO → MAIS RECENTE
+        .sort((a, b) => new Date(a.dataEntrada) - new Date(b.dataEntrada))
 
         // 🔍 FILTROS
         .filter(v =>
