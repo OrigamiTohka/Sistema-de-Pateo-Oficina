@@ -53,8 +53,8 @@ window.onload = function () {
             veiculos.push({ id: docSnap.id, ...docSnap.data() });
         });
 
-        filtrarPorCliente();
         atualizarFiltroClientes();
+        aplicarFiltros();
     });
 };
 
@@ -105,7 +105,9 @@ function renderizarVeiculo(veiculo) {
                 onchange="mudarDataEntrada('${veiculo.id}', this.value)">
         </td>
         <td>${veiculo.dataFinalizacao || "-"}</td>
-        <td><button onclick="removerVeiculo('${veiculo.id}')">Remover</button></td>
+        <td>
+            <button onclick="removerVeiculo('${veiculo.id}')">Remover</button>
+        </td>
     `;
 
     aplicarCorStatus(linha, veiculo.status);
@@ -136,47 +138,26 @@ window.removerVeiculo = async function (id) {
     }
 };
 
-// 🔍 FILTRO
-window.filtrarPorCliente = function () {
-    const filtroCliente = document.getElementById("filtroCliente").value;
-    const inputPlaca = document.getElementById("pesquisaPlaca");
-    const pesquisaPlaca = inputPlaca
-        ? inputPlaca.value.toUpperCase()
-        : "";
+// 🔍 FILTROS (CLIENTE + STATUS + PLACA)
+window.aplicarFiltros = function () {
+    const filtroCliente = document.getElementById("filtroCliente")?.value || "Todos";
+    const filtroStatus = document.getElementById("filtroStatus")?.value || "Todos";
+    const pesquisaPlaca = document.getElementById("pesquisaPlaca")?.value.toUpperCase().trim() || "";
 
     const lista = document.getElementById("listaVeiculos");
     lista.innerHTML = "";
 
     veiculos
-        // 📅 MAIS ANTIGO → MAIS RECENTE
         .sort((a, b) => new Date(a.dataEntrada) - new Date(b.dataEntrada))
-
-        // 🔍 FILTROS
         .filter(v =>
             (filtroCliente === "Todos" || v.cliente === filtroCliente) &&
+            (filtroStatus === "Todos" || v.status === filtroStatus) &&
             (pesquisaPlaca === "" || v.placa.includes(pesquisaPlaca))
         )
-
-        // 🖥️ RENDERIZA
         .forEach(renderizarVeiculo);
 };
 
-// 🔍 PESQUISAR POR PLACA
-window.pesquisarPorPlaca = function () {
-    const texto = document.getElementById("pesquisaPlaca").value
-        .toUpperCase()
-        .trim();
-
-    const lista = document.getElementById("listaVeiculos");
-    lista.innerHTML = "";
-
-    veiculos
-        .filter(v => v.placa.toUpperCase().includes(texto))
-        .sort((a, b) => new Date(a.dataEntrada) - new Date(b.dataEntrada))
-        .forEach(v => renderizarVeiculo(v));
-};
-
-// 🔄 ATUALIZAR FILTRO
+// 🔄 ATUALIZAR FILTRO CLIENTES
 function atualizarFiltroClientes() {
     const select = document.getElementById("filtroCliente");
     select.innerHTML = `<option value="Todos">Todos</option>`;
@@ -189,7 +170,7 @@ function atualizarFiltroClientes() {
     });
 }
 
-// 🎨 CORES
+// 🎨 CORES STATUS
 function aplicarCorStatus(linha, status) {
     const cores = {
         "Finalizado": "#145a32",
