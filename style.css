@@ -25,6 +25,25 @@ h1 {
     min-width: 220px;
 }
 
+.contadores {
+    display: flex;
+    gap: 15px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+}
+
+.card {
+    padding: 12px 18px;
+    border-radius: 8px;
+    background: #2a2a2a;
+    color: white;
+    font-weight: bold;
+}
+
+.card.aguardando { background: #b03a2e; }
+.card.emServico { background: #7d6608; }
+.card.finalizado { background: #145a32; }
+
 input, select, button {
     padding: 8px;
     border-radius: 5px;

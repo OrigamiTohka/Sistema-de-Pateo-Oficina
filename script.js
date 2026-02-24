@@ -147,6 +147,11 @@ window.aplicarFiltros = function () {
     const lista = document.getElementById("listaVeiculos");
     lista.innerHTML = "";
 
+    let total = 0;
+    let aguardando = 0;
+    let emServico = 0;
+    let finalizado = 0;
+
     veiculos
         .sort((a, b) => new Date(a.dataEntrada) - new Date(b.dataEntrada))
         .filter(v =>
@@ -154,7 +159,21 @@ window.aplicarFiltros = function () {
             (filtroStatus === "Todos" || v.status === filtroStatus) &&
             (pesquisaPlaca === "" || v.placa.includes(pesquisaPlaca))
         )
-        .forEach(renderizarVeiculo);
+        .forEach(v => {
+            total++;
+
+            if (v.status.includes("Aguardando")) aguardando++;
+            if (v.status === "Em Serviço") emServico++;
+            if (v.status === "Finalizado") finalizado++;
+
+            renderizarVeiculo(v);
+        });
+
+    // 🔢 ATUALIZA CONTADORES
+    document.getElementById("totalVeiculos").textContent = total;
+    document.getElementById("aguardando").textContent = aguardando;
+    document.getElementById("emServico").textContent = emServico;
+    document.getElementById("finalizado").textContent = finalizado;
 };
 
 // 🔄 ATUALIZAR FILTRO CLIENTES
