@@ -14,11 +14,34 @@ h1 {
     text-align: center;
 }
 
-.formulario, .filtro {
+.formulario {
+    display: grid;
+    grid-template-columns:
+        20%  /* Cliente */
+        15%  /* Modelo */
+        15%  /* Placa */
+        20%  /* Status */
+        15%  /* Data Entrada */
+        10%  /* Finalização */
+        10%; /* Botão */
+    gap: 10px;
+    margin-bottom: 15px;
+    align-items: center;
+}
+
+/* mantém o filtro como flex */
+.filtro {
     display: flex;
     gap: 10px;
     margin-bottom: 15px;
     align-items: center;
+}
+
+/* inputs ocupam a coluna inteira */
+.formulario input,
+.formulario select,
+.formulario button {
+    width: 100%;
 }
 
 input, select, button {
