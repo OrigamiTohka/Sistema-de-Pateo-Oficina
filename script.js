@@ -149,8 +149,11 @@ window.filtrarPorCliente = function () {
     lista.innerHTML = "";
 
     veiculos
-        // 📅 MAIS ANTIGO → MAIS RECENTE
-        .sort((a, b) => new Date(a.dataEntrada) - new Date(b.dataEntrada))
+        // 📅 MAIS ANTIGO → MAIS RECENTE (AGORA FUNCIONA 100%)
+        .sort((a, b) =>
+            converterDataParaOrdenacao(a.dataEntrada) -
+            converterDataParaOrdenacao(b.dataEntrada)
+        )
 
         // 🔍 FILTROS
         .filter(v =>
@@ -161,6 +164,7 @@ window.filtrarPorCliente = function () {
         // 🖥️ RENDERIZA
         .forEach(renderizarVeiculo);
 };
+
 // 🔄 ATUALIZAR FILTRO
 function atualizarFiltroClientes() {
     const select = document.getElementById("filtroCliente");
