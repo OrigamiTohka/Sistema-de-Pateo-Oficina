@@ -162,6 +162,21 @@ window.filtrarPorCliente = function () {
         .forEach(renderizarVeiculo);
 };
 
+// 🔍 PESQUISAR POR PLACA
+window.pesquisarPorPlaca = function () {
+    const texto = document.getElementById("pesquisaPlaca").value
+        .toUpperCase()
+        .trim();
+
+    const lista = document.getElementById("listaVeiculos");
+    lista.innerHTML = "";
+
+    veiculos
+        .filter(v => v.placa.toUpperCase().includes(texto))
+        .sort((a, b) => new Date(a.dataEntrada) - new Date(b.dataEntrada))
+        .forEach(v => renderizarVeiculo(v));
+};
+
 // 🔄 ATUALIZAR FILTRO
 function atualizarFiltroClientes() {
     const select = document.getElementById("filtroCliente");

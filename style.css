@@ -21,6 +21,10 @@ h1 {
     align-items: center;
 }
 
+#pesquisaPlaca {
+    min-width: 220px;
+}
+
 input, select, button {
     padding: 8px;
     border-radius: 5px;
