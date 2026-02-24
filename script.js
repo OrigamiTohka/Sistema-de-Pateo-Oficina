@@ -138,15 +138,29 @@ window.removerVeiculo = async function (id) {
 
 // 🔍 FILTRO
 window.filtrarPorCliente = function () {
-    const filtro = document.getElementById("filtroCliente").value;
+    const filtroCliente = document.getElementById("filtroCliente").value;
+
+    const inputPlaca = document.getElementById("pesquisaPlaca");
+    const pesquisaPlaca = inputPlaca
+        ? inputPlaca.value.toUpperCase()
+        : "";
+
     const lista = document.getElementById("listaVeiculos");
     lista.innerHTML = "";
 
     veiculos
-        .filter(v => filtro === "Todos" || v.cliente === filtro)
+        // 📅 MAIS ANTIGO → MAIS RECENTE
+        .sort((a, b) => new Date(a.dataEntrada) - new Date(b.dataEntrada))
+
+        // 🔍 FILTROS
+        .filter(v =>
+            (filtroCliente === "Todos" || v.cliente === filtroCliente) &&
+            (pesquisaPlaca === "" || v.placa.includes(pesquisaPlaca))
+        )
+
+        // 🖥️ RENDERIZA
         .forEach(renderizarVeiculo);
 };
-
 // 🔄 ATUALIZAR FILTRO
 function atualizarFiltroClientes() {
     const select = document.getElementById("filtroCliente");
